@@ -3,8 +3,8 @@ l10n-misc-scripts
 
 Several scripts for l10n basic tasks:
 
-blank_the_msgstr_in_all_entries
-  script for blanking the msgstr fields in all entries in a Gettext PO file.
+po2pot
+  script for converting a Gettext PO file in a Gettext POT file by blanking all the msgstr fields in all entries, and generating a fresh header.
 
 invert_msgid_and_msgstr_in_one_file
   script for inverting the msgid and msgstr fields in all entries in a Gettext PO file.
