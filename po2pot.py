@@ -16,46 +16,94 @@
 # You should have received a copy of the GNU General Public License
 # along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
-#TODO fix for passing the files and options as parameters in command line
-lang = "gl"
+import sys
+import optparse
 
-fich = open("DJL." + lang + ".po", "r")
-lines = fich.readlines()
-fich.close()
-resul = open("DJL_FINAL." + lang + ".po", "w")
+def write_fresh_header(outputfile):
+    outputfile.write("""# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid \"\"
+msgstr \"\"
+\"Project-Id-Version: PACKAGE VERSION\\n\"
+\"Report-Msgid-Bugs-To: \\n\"
+\"POT-Creation-Date: 2012-12-02 15:39+0100\\n\"
+\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n\"
+\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n\"
+\"Language-Team: LANGUAGE <LL@li.org>\\n\"
+\"MIME-Version: 1.0\\n\"
+\"Content-Type: text/plain; charset=CHARSET\\n\"
+\"Content-Transfer-Encoding: 8bit\\n\"
+\"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\\n\"
 
-i = 0
-msgstr_atopado = False
-listo_para_escribir_entrada = False
-ainda_non_pasou_a_cabeceira = True
+""")
 
-
-for l in lines:
-    i = i + 1
+if __name__ == '__main__':
+    parser = optparse.OptionParser()
+    parser.add_option("-i", "--input", dest="inputfilename",
+                      help="read from INPUT in po format", metavar="INPUT")
+    parser.add_option("-o", "--output", dest="outputfilename",
+                      help="write to OUTPUT in pot format", metavar="OUTPUT")
+    (options, args) = parser.parse_args()
     
-    if ainda_non_pasou_a_cabeceira:
-        resul.write(l)
-        if l.startswith("msgstr \""):
-            ainda_non_pasou_a_cabeceira = False
+    if options.inputfilename == None:
+        parser.print_help()
+        sys.exit(1)
+    
+    try:
+        inputfile = open(options.inputfilename, "r")
+        inputlines = inputfile.readlines()
+        inputfile.close()
+    except IOError:
+        print("\nError: the input file \"%s\" couldn't be opened.\n" %
+              options.inputfilename)
+        sys.exit(1)
+    
+    if options.outputfilename == None:
+        outputfile = sys.stdout
     else:
-        # TODO fix for getting it working with plurals
-        if l.startswith("msgstr \""):
-            msgstr_atopado = True
-        elif l == "\n":
-            msgstr_atopado = False
-            listo_para_escribir_entrada = True
-        
-        
-        if msgstr_atopado:
-            pass
-        elif listo_para_escribir_entrada:
-            # Write the whole entry at once
-            listo_para_escribir_entrada = False
-            resul.write("msgstr \"\"\n\n")
+        try:
+            outputfile = open(options.outputfilename, "w")
+        except IOError:
+            print("\nError: the output file \"%s\" couldn't be opened.\n" %
+                  options.outputfilename)
+            sys.exit(1)
+    
+    header_not_yet_finished = True
+    msgstr_found = False
+    plural_found = False
+    # Write a fresh header for the POT file
+    write_fresh_header(outputfile)
+    
+    for line in inputlines:
+        if header_not_yet_finished:
+            if line == "\n":
+                header_not_yet_finished = False
         else:
-            resul.write(l)
-
-resul.close()
+            if line.startswith("msgstr \""):
+                # Because msgstr entries can expand to several lines
+                msgstr_found = True
+            elif line.startswith("msgstr[0] \""):
+                # Because plural entries can expand to several lines
+                plural_found = True
+            elif line == "\n":
+                # Write the msgstr or msgstr[n] blank entries
+                if msgstr_found:
+                    msgstr_found = False
+                    outputfile.write("msgstr \"\"\n\n")
+                elif plural_found:
+                    plural_found = False
+                    outputfile.write("msgstr[0] \"\"\nmsgstr[1] \"\"\n\n")
+            elif not (line.startswith("#, fuzzy") or msgstr_found or
+                      plural_found):
+                # Write the read line in case that it doesn't match any of this
+                # particular cases
+                outputfile.write(line)
+    
+    outputfile.close()
 
 
 
