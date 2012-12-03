@@ -49,6 +49,7 @@ if __name__ == '__main__':
                       help="write to OUTPUT in pot format", metavar="OUTPUT")
     (options, args) = parser.parse_args()
     
+    # If no input filename is provided
     if options.inputfilename == None:
         parser.print_help()
         sys.exit(1)
@@ -75,13 +76,13 @@ if __name__ == '__main__':
     header_not_yet_finished = True
     msgstr_found = False
     plural_found = False
+    
     # Write a fresh header for the POT file
     write_fresh_header(outputfile)
     
     for line in inputlines:
-        if header_not_yet_finished:
-            if line == "\n":
-                header_not_yet_finished = False
+        if header_not_yet_finished and line == "\n":
+            header_not_yet_finished = False
         else:
             if line.startswith("msgstr \""):
                 # Because msgstr entries can expand to several lines
