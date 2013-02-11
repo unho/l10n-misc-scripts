@@ -81,8 +81,9 @@ if __name__ == '__main__':
     write_fresh_header(outputfile)
     
     for line in inputlines:
-        if header_not_yet_finished and line == "\n":
-            header_not_yet_finished = False
+        if header_not_yet_finished:
+            if line == "\n":
+                header_not_yet_finished = False
         else:
             if line.startswith("msgstr \""):
                 # Because msgstr entries can expand to several lines
