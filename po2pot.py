@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 #
-# Copyright 2012 Leandro Regueiro
+# Copyright 2012, 2013 Leandro Regueiro
 # 
 # This code is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
