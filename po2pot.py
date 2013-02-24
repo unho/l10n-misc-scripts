@@ -103,7 +103,7 @@ if __name__ == '__main__':
                 # but if no other flag is present then remove the entire line
                 if not line == "#, fuzzy":
                     outputfile.write(line.replace(", fuzzy", ""))
-            elif not (line.startswith("#~ ") or line.startswith("#  ") or
+            elif not (line.startswith("#~ ") or line.startswith("# ") or
                       line.startswith("#| ") or msgstr_found or plural_found):
                 # Write the read line in case that it doesn't match any of this
                 # particular cases
