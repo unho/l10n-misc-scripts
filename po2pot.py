@@ -99,6 +99,7 @@ if __name__ == '__main__':
                     plural_found = False
                     outputfile.write("msgstr[0] \"\"\nmsgstr[1] \"\"\n\n")
             elif not (line.startswith("#, fuzzy") or line.startswith("#~ ") or
+                      line.startswith("#  ") or line.startswith("#| ") or
                       msgstr_found or plural_found):
                 # Write the read line in case that it doesn't match any of this
                 # particular cases
