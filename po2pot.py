@@ -48,7 +48,7 @@ if __name__ == '__main__':
                       help="write to OUTPUT in pot format", metavar="OUTPUT")
     (options, args) = parser.parse_args()
 
-    # If no input filename is provided
+    # If no input filename is provided.
     if options.inputfilename == None:
         parser.print_help()
         sys.exit(1)
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     msgstr_found = False
     plural_found = False
 
-    # Write a fresh header for the POT file
+    # Write a fresh header for the POT file.
     write_fresh_header(outputfile)
 
     for line in inputlines:
@@ -85,13 +85,13 @@ if __name__ == '__main__':
                 header_not_yet_finished = False
         else:
             if line.startswith("msgstr \""):
-                # Because msgstr entries can expand to several lines
+                # Because msgstr entries can expand to several lines.
                 msgstr_found = True
             elif line.startswith("msgstr[0] \""):
-                # Because plural entries can expand to several lines
+                # Because plural entries can expand to several lines.
                 plural_found = True
             elif line == "\n":
-                # Write the msgstr or msgstr[n] blank entries
+                # Write the msgstr or msgstr[n] blank entries.
                 if msgstr_found:
                     msgstr_found = False
                     outputfile.write("msgstr \"\"\n\n")
@@ -100,7 +100,7 @@ if __name__ == '__main__':
                     outputfile.write("msgstr[0] \"\"\nmsgstr[1] \"\"\n\n")
             elif line.startswith("#, fuzzy"):
                 # If another flag is present then just remove the fuzzy flag,
-                # but if no other flag is present then remove the entire line
+                # but if no other flag is present then remove the entire line.
                 if not line == "#, fuzzy":
                     outputfile.write(line.replace(", fuzzy", ""))
             elif not (line.startswith("#~ ") or line.startswith("# ") or
