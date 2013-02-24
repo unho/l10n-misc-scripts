@@ -98,9 +98,13 @@ if __name__ == '__main__':
                 elif plural_found:
                     plural_found = False
                     outputfile.write("msgstr[0] \"\"\nmsgstr[1] \"\"\n\n")
-            elif not (line.startswith("#, fuzzy") or line.startswith("#~ ") or
-                      line.startswith("#  ") or line.startswith("#| ") or
-                      msgstr_found or plural_found):
+            elif line.startswith("#, fuzzy"):
+                # If another flag is present then just remove the fuzzy flag,
+                # but if no other flag is present then remove the entire line
+                if not line == "#, fuzzy":
+                    outputfile.write(line.replace(", fuzzy", ""))
+            elif not (line.startswith("#~ ") or line.startswith("#  ") or
+                      line.startswith("#| ") or msgstr_found or plural_found):
                 # Write the read line in case that it doesn't match any of this
                 # particular cases
                 outputfile.write(line)
