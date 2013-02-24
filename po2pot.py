@@ -106,7 +106,9 @@ if __name__ == '__main__':
             elif not (line.startswith("#~ ") or line.startswith("# ") or
                       line.startswith("#| ") or msgstr_found or plural_found):
                 # Write the read line in case that it doesn't match any of this
-                # particular cases
+                # particular cases: obsolete strings, translator comments,
+                # previous untranslated strings, the current line is within a
+                # msgstr or msgstr[n].
                 outputfile.write(line)
 
     outputfile.close()
