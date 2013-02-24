@@ -47,12 +47,12 @@ if __name__ == '__main__':
     parser.add_option("-o", "--output", dest="outputfilename",
                       help="write to OUTPUT in pot format", metavar="OUTPUT")
     (options, args) = parser.parse_args()
-    
+
     # If no input filename is provided
     if options.inputfilename == None:
         parser.print_help()
         sys.exit(1)
-    
+
     try:
         inputfile = open(options.inputfilename, "r")
         inputlines = inputfile.readlines()
@@ -61,7 +61,7 @@ if __name__ == '__main__':
         print("\nError: the input file \"%s\" couldn't be opened.\n" %
               options.inputfilename)
         sys.exit(1)
-    
+
     if options.outputfilename == None:
         outputfile = sys.stdout
     else:
@@ -71,14 +71,14 @@ if __name__ == '__main__':
             print("\nError: the output file \"%s\" couldn't be opened.\n" %
                   options.outputfilename)
             sys.exit(1)
-    
+
     header_not_yet_finished = True
     msgstr_found = False
     plural_found = False
-    
+
     # Write a fresh header for the POT file
     write_fresh_header(outputfile)
-    
+
     for line in inputlines:
         if header_not_yet_finished:
             if line == "\n":
@@ -108,7 +108,7 @@ if __name__ == '__main__':
                 # Write the read line in case that it doesn't match any of this
                 # particular cases
                 outputfile.write(line)
-    
+
     outputfile.close()
 
 
